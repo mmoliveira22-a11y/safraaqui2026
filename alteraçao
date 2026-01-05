@@ -1,0 +1,3 @@
+git add index.html css/icons.css css/styles.css
+git commit -m "Corrige imports de CSS - remove CDN e usa ícones locais"
+git push origin main 
