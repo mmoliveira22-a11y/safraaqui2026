@@ -1,62 +1,385 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafraAqui - Inteligência na Colheita</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700;900&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#f4c025",
-                        "primary-dark": "#dca50b",
-                        "background-light": "#f8f8f5",
-                        "background-dark": "#1a1814",
-                        "surface-light": "#ffffff",
-                        "surface-dark": "#2c281b",
-                        "text-dark": "#181611",
-                        "text-muted": "#8a8060",
-                    },
-                    fontFamily: {
-                        "display": ["Work Sans", "sans-serif"],
-                        "body": ["Noto Sans", "sans-serif"],
-                    },
-                    borderRadius: {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "2xl": "1rem",
-                        "full": "9999px"
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        body { min-height: 100dvh; }
-    </style>
-<script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "@google/genai": "https://esm.sh/@google/genai@^1.34.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
+    <title>Safraaqui - Conectando o Campo | Marketplace de Serviços Agrícolas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-text-dark transition-colors duration-200">
-    <div id="root"></div>
-<script type="module" src="/index.tsx"></script>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-seedling"></i>
+                <span>Safraaqui</span>
+            </a>
+            <nav class="nav-desktop">
+                <a href="#como-funciona">Como Funciona</a>
+                <a href="#beneficios">Benefícios</a>
+                <a href="#contato">Contato</a>
+            </nav>
+            <div class="header-actions">
+                <button class="btn btn-outline" onclick="openModal('loginModal')">Entrar</button>
+                <button class="btn btn-primary" onclick="openModal('registerModal')">Cadastrar</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="mobile-menu" id="mobileMenu">
+            <nav>
+                <a href="#como-funciona">Como Funciona</a>
+                <a href="#beneficios">Benefícios</a>
+                <a href="#contato">Contato</a>
+                <div class="mobile-menu-actions">
+                    <button class="btn btn-outline btn-block" onclick="openModal('loginModal'); toggleMobileMenu()">Entrar</button>
+                    <button class="btn btn-primary btn-block" onclick="openModal('registerModal'); toggleMobileMenu()">Cadastrar</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Conectando o Campo,<br><span class="highlight">Transformando o Agronegócio</span></h1>
+                <p class="hero-subtitle">A plataforma digital que conecta produtores rurais a prestadores de serviços agrícolas de forma rápida, segura e eficiente.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-lg" onclick="selectRole('produtor')">
+                        <i class="fas fa-tractor"></i>
+                        Sou Produtor
+                    </button>
+                    <button class="btn btn-gold btn-lg" onclick="selectRole('prestador')">
+                        <i class="fas fa-tools"></i>
+                        Sou Prestador
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">50M+</span>
+                        <span class="stat-label">Hectares<br>Plantados</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">30%</span>
+                        <span class="stat-label">Redução<br>de Custos</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Conexão<br>Nacional</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <div class="mock-app">
+                        <div class="mock-header">
+                            <span class="mock-title">Safraaqui</span>
+                        </div>
+                        <div class="mock-map">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="mock-content">
+                            <div class="mock-request">
+                                <i class="fas fa-seedling"></i>
+                                <div>
+                                    <strong>Colheita de Soja</strong>
+                                    <span>Lucas do Rio Verde - MT</span>
+                                </div>
+                            </div>
+                            <div class="mock-request">
+                                <i class="fas fa-spray-can"></i>
+                                <div>
+                                    <strong>Pulverização</strong>
+                                    <span>Sorriso - MT</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary btn-sm btn-block">Ver Oportunidades</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problema/Solução Section -->
+    <section class="problem-solution" id="como-funciona">
+        <div class="container">
+            <div class="section-header">
+                <h2>O Desafio do Agronegócio</h2>
+                <p>Você conhece bem esses problemas?</p>
+            </div>
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Máquinas Paradas</h3>
+                    <p>Prestadores perdem dias valiosos de trabalho por falta de visibilidade da demanda regional.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-truck-loading"></i>
+                    </div>
+                    <h3>Frete Morto</h3>
+                    <p>Pranchas de transporte viajam vazias em 40% dos trajetos de retorno.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Falta de Confiança</h3>
+                    <p>Dificuldade em encontrar prestadores qualificados em regiões distantes.</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Intermediários Caros</h3>
+                    <p>Agenciadores absorvem grande parte dos lucros, com casos frequentes de golpes.</p>
+                </div>
+            </div>
+            <div class="solution-box">
+                <h2>A Solução: Safraaqui</h2>
+                <p>Uma plataforma completa que revoluciona a forma como prestadores e produtores se conectam.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="beneficios">
+        <div class="container">
+            <div class="section-header">
+                <h2>Por que escolher o Safraaqui?</h2>
+                <p>Tecnologia a serviço da sua produtividade</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Geolocalização Inteligente</h3>
+                    <p>Mapa de disponibilidade em tempo real com localização de máquinas e prestadores em todo o território nacional.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>Match de Rotas</h3>
+                    <p>Algoritmo proprietário que identifica fretes de retorno, reduzindo custos em até 30%.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Pagamentos Garantidos</h3>
+                    <p>Sistema de escrow garante segurança para produtores e prestadores.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Perfis Verificados</h3>
+                    <p>Histórico completo de manutenção e avaliações para máxima confiabilidade.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <h3>Antecipação de Recebíveis</h3>
+                    <p>Fluxo de caixa saudável com antecipação de pagamentos para prestadores.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Rede de Especialistas</h3>
+                    <p>Programa de agentes para suporte local e indicações qualificadas.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Como Funciona -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2>Como Funciona</h2>
+                <p>Simples, rápido e eficiente</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Solicite</h3>
+                        <p>Produtor cadastra sua demanda com localização e especificações do serviço.</p>
+                    </div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Localize</h3>
+                        <p>Sistema encontra os melhores prestadores próximos à sua região.</p>
+                    </div>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Contrate</h3>
+                        <p>Compare avaliações, negocie e finalize o contrato com segurança.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Pronto para transformar seu agronegócio?</h2>
+                <p>Junte-se a milhares de produtores e prestadores que já utilizam o Safraaqui.</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary btn-lg" onclick="selectRole('produtor')">
+                        <i class="fas fa-tractor"></i>
+                        Cadastrar como Produtor
+                    </button>
+                    <button class="btn btn-gold btn-lg" onclick="selectRole('prestador')">
+                        <i class="fas fa-tools"></i>
+                        Cadastrar como Prestador
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contato">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-seedling"></i>
+                        <span>Safraaqui</span>
+                    </a>
+                    <p>Conectando o campo, transformando o agronegócio brasileiro.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#">Sobre Nós</a></li>
+                        <li><a href="#">Como Funciona</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Carreiras</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Termos de Uso</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>Contato</h4>
+                    <p><i class="fas fa-phone"></i> (45) 99135-6442</p>
+                    <p><i class="fas fa-envelope"></i> contato@safraaqui.com.br</p>
+                    <p><i class="fas fa-globe"></i> www.safraaqui.com.br</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Safraaqui. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-overlay" onclick="closeModal('loginModal')"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('loginModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3>Bem-vindo de volta!</h3>
+                <p>Faça login para acessar sua conta</p>
+            </div>
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" placeholder="Sua senha" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                <p class="modal-footer-text">Não tem conta? <a href="#" onclick="switchModal('loginModal', 'registerModal')">Cadastre-se</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-overlay" onclick="closeModal('registerModal')"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('registerModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3>Crie sua conta</h3>
+                <p>Junte-se ao Safraaqui</p>
+            </div>
+            <div class="role-selector">
+                <button class="role-btn active" data-role="produtor" onclick="selectRegisterRole('produtor')">
+                    <i class="fas fa-tractor"></i>
+                    <span>Produtor</span>
+                </button>
+                <button class="role-btn" data-role="prestador" onclick="selectRegisterRole('prestador')">
+                    <i class="fas fa-tools"></i>
+                    <span>Prestador</span>
+                </button>
+            </div>
+            <form id="registerForm" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="registerName">Nome Completo</label>
+                    <input type="text" id="registerName" placeholder="Seu nome completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-mail</label>
+                    <input type="email" id="registerEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPhone">Telefone</label>
+                    <input type="tel" id="registerPhone" placeholder="(00) 00000-0000" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <input type="password" id="registerPassword" placeholder="Crie uma senha" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+                <p class="modal-footer-text">Já tem conta? <a href="#" onclick="switchModal('registerModal', 'loginModal')">Faça login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

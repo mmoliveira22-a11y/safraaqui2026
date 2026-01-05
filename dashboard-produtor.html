@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Produtor - Safraaqui</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dashboard-body">
+    <!-- Dashboard Layout -->
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-seedling"></i>
+                    <span>Safraaqui</span>
+                </a>
+                <button class="sidebar-close" onclick="toggleSidebar()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="userName">Carregando...</span>
+                    <span class="user-role">Produtor Rural</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="solicitacoes">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Minhas Solicitações</span>
+                </a>
+                <a href="#" class="nav-item" data-section="prestadores">
+                    <i class="fas fa-users"></i>
+                    <span>Prestadores</span>
+                </a>
+                <a href="#" class="nav-item" data-section="pagamentos">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Pagamentos</span>
+                </a>
+                <a href="#" class="nav-item" data-section="perfil">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Meu Perfil</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item logout" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <button class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="top-bar-title">
+                    <h1 id="pageTitle">Dashboard</h1>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="icon-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                    <button class="icon-btn">
+                        <i class="fas fa-comment-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Dashboard Section -->
+                <section class="section active" id="dashboard-section">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">12</span>
+                                <span class="stat-label">Solicitações Ativas</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon gold">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">8</span>
+                                <span class="stat-label">Serviços Concluídos</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">24</span>
+                                <span class="stat-label">Prestadores Favoritos</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon red">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">R$ 45.200</span>
+                                <span class="stat-label">Investido em Serviços</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Map -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-map-marker-alt"></i> Prestadores Próximos</h2>
+                            <button class="btn btn-outline btn-sm" onclick="openNewRequestModal()">
+                                <i class="fas fa-plus"></i> Nova Solicitação
+                            </button>
+                        </div>
+                        <div class="map-container" id="dashboardMap"></div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-clock"></i> Atividades Recentes</h2>
+                        </div>
+                        <div class="activity-list" id="recentActivity">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Solicitações Section -->
+                <section class="section" id="solicitacoes-section">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-clipboard-list"></i> Minhas Solicitações</h2>
+                            <button class="btn btn-primary btn-sm" onclick="openNewRequestModal()">
+                                <i class="fas fa-plus"></i> Nova Solicitação
+                            </button>
+                        </div>
+                        <div class="requests-list" id="requestsList">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Prestadores Section -->
+                <section class="section" id="prestadores-section">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-users"></i> Prestadores Disponíveis</h2>
+                            <div class="filter-group">
+                                <select class="filter-select">
+                                    <option value="">Todos os tipos</option>
+                                    <option value="colheita">Colheita</option>
+                                    <option value="plantio">Plantio</option>
+                                    <option value="pulverizacao">Pulverização</option>
+                                    <option value="transporte">Transporte</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="providers-grid" id="providersGrid">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Pagamentos Section -->
+                <section class="section" id="pagamentos-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fas fa-wallet"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">R$ 12.500</span>
+                                <span class="stat-label">Saldo em Conta</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">R$ 8.200</span>
+                                <span class="stat-label">Em Andamento</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-history"></i> Histórico de Pagamentos</h2>
+                        </div>
+                        <div class="payments-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Serviço</th>
+                                        <th>Prestador</th>
+                                        <th>Valor</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentsTable">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Perfil Section -->
+                <section class="section" id="perfil-section">
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-user-cog"></i> Meus Dados</h2>
+                        </div>
+                        <form class="profile-form" id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Nome Completo</label>
+                                    <input type="text" value="Carlos Silva Mendes" id="profileName">
+                                </div>
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <input type="email" value="carlos@ fazendaouro.com.br" id="profileEmail">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Telefone</label>
+                                    <input type="tel" value="(65) 99876-5432">
+                                </div>
+                                <div class="form-group">
+                                    <label>CPF/CNPJ</label>
+                                    <input type="text" value="123.456.789-00">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Fazenda</label>
+                                    <input type="text" value="Fazenda Ouro Verde">
+                                </div>
+                                <div class="form-group">
+                                    <label>Cidade/UF</label>
+                                    <input type="text" value="Lucas do Rio Verde - MT">
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Request Modal -->
+    <div class="modal" id="newRequestModal">
+        <div class="modal-overlay" onclick="closeModal('newRequestModal')"></div>
+        <div class="modal-content modal-lg">
+            <button class="modal-close" onclick="closeModal('newRequestModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3><i class="fas fa-plus-circle"></i> Nova Solicitação de Serviço</h3>
+                <p>Preencha os detalhes do serviço que você precisa</p>
+            </div>
+            <form id="newRequestForm" onsubmit="handleNewRequest(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="serviceType">Tipo de Serviço *</label>
+                        <select id="serviceType" required>
+                            <option value="">Selecione...</option>
+                            <option value="colheita">Colheita</option>
+                            <option value="plantio">Plantio</option>
+                            <option value="pulverizacao">Pulverização</option>
+                            <option value="transporte">Transporte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceCulture">Cultura *</label>
+                        <select id="serviceCulture" required>
+                            <option value="">Selecione...</option>
+                            <option value="soja">Soja</option>
+                            <option value="milho">Milho</option>
+                            <option value="algodao">Algodão</option>
+                            <option value="cafe">Café</option>
+                            <option value="cana">Cana-de-açúcar</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="serviceArea">Área (hectares) *</label>
+                        <input type="number" id="serviceArea" placeholder="Ex: 500" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDate">Data Preferida *</label>
+                        <input type="date" id="serviceDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="serviceLocation">Localização *</label>
+                    <div class="location-input">
+                        <input type="text" id="serviceLocation" placeholder="Buscar localização..." required>
+                        <button type="button" class="btn btn-outline" onclick="useCurrentLocation()">
+                            <i class="fas fa-crosshairs"></i>
+                        </button>
+                    </div>
+                    <small>Ou clique no mapa para definir a localização</small>
+                </div>
+                <div class="form-group">
+                    <label for="serviceDescription">Observações Adicionais</label>
+                    <textarea id="serviceDescription" rows="3" placeholder="Detalhes importantes sobre o serviço, acesso à área, etc."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal('newRequestModal')">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Criar Solicitação</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Service Detail Modal -->
+    <div class="modal" id="serviceDetailModal">
+        <div class="modal-overlay" onclick="closeModal('serviceDetailModal')"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('serviceDetailModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-header">
+                <h3>Detalhes do Serviço</h3>
+            </div>
+            <div class="service-detail" id="serviceDetail">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Provider Detail Modal -->
+    <div class="modal" id="providerDetailModal">
+        <div class="modal-overlay" onclick="closeModal('providerDetailModal')"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('providerDetailModal')">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="provider-detail" id="providerDetail">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
