@@ -1,0 +1,7 @@
+{
+  "name": "SafraAqui",
+  "description": "Uma plataforma inteligente que conecta agricultores a prestadores de serviços de colheita, utilizando IA para otimizar o cronograma e encontrar os melhores parceiros.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
